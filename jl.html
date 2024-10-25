@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Indian Recipes Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header id="top">
+        <h1>Indian Recipes Hub</h1>
+        <input type="text" id="searchInput" placeholder="Search for recipes...">
+        <button onclick="searchRecipes()">Search</button>
+        <!-- Add Recipe Button with Anchor Link -->
+        <button id="addRecipeBtn" onclick="scrollToAddRecipe()">Add Your Recipe</button>
+    </header>
+    <nav id="categories">
+        <button onclick="filterByCategory('All')">All</button>
+        <button onclick="filterByCategory('South Indian')">South Indian</button>
+        <button onclick="filterByCategory('East Indian')">East Indian</button>
+        <button onclick="filterByCategory('West Indian')">West Indian</button>
+        <button onclick="filterByCategory('Central Indian')">Central Indian</button>
+        <button onclick="filterByCategory('Punjabi Cuisine')">Punjabi Cuisine</button>
+        <button onclick="filterByCategory('Rajasthani Cuisine')">Rajasthani Cuisine</button>
+        <button onclick="filterByCategory('Gujarati Cuisine')">Gujarati Cuisine</button>
+        <button onclick="filterByCategory('Bengali Cuisine')">Bengali Cuisine</button>
+        <button onclick="filterByCategory('Kerala Cuisine')">Kerala Cuisine</button>
+        <button onclick="filterByCategory('Tamil Cuisine')">Tamil Cuisine</button>
+        <button onclick="filterByCategory('Maharashtrian Cuisine')">Maharashtrian Cuisine</button>
+        <button onclick="filterByCategory('Goan Cuisine')">Goan Cuisine</button>
+        <button onclick="filterByCategory('Parsi Cuisine')">Parsi Cuisine</button>
+        <button onclick="filterByCategory('Kashmiri Cuisine')">Kashmiri Cuisine</button>
+        <button id="favButton">Favorites</button>
+    </nav>   
+    <main id="recipeContainer">   
+    </main>
+
+    <!-- Add Recipe Section -->
+    <div id="addRecipeSection">
+        <div id="addRecipeModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="closeBtn" id="closeModalBtn">&times;</span>
+                <h2>Add Your Recipe</h2>
+                <form id="addRecipeForm">
+                    <label for="recipeTitle">Recipe Title:</label>
+                    <input type="text" id="recipeTitle" name="recipeTitle" required>
+
+                    <label for="recipeImage">Upload Image:</label>
+                    <input type="file" id="recipeImage" name="recipeImage" accept="image/*" required>
+
+                    <label for="recipeInstructions">Instructions:</label>
+                    <textarea id="recipeInstructions" name="recipeInstructions" placeholder="Write the instructions here..." required></textarea>
+
+                    <button type="submit">Submit Recipe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>Contact Us:</p>
+            <p>Email: info@indianrecipehub.com</p>
+            <p>Phone: +1234567890</p>
+        </div>
+        <div class="social-icons">
+            <a href="https://m.facebook.com/" class="icon" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://twitter.com/login" class="icon" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/?hl=en" class="icon" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://in.pinterest.com/ideas/" class="icon" target="_blank"><i class="fab fa-pinterest"></i></a>
+        </div>
+    </footer>
+
+    <script src="hd (3).js"></script>
+    <script>
+        // Function to Scroll to the Add Recipe Section and Open the Modal
+        function scrollToAddRecipe() {
+            const addRecipeSection = document.getElementById('addRecipeSection');
+            addRecipeSection.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('addRecipeModal').style.display = 'block';
+        }
+
+        // Close the Add Recipe Modal
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            document.getElementById('addRecipeModal').style.display = 'none';
+        });
+
+        // Close the modal if the user clicks outside of it
+        window.onclick = function(event) {
+            var modal = document.getElementById('addRecipeModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        };
+
+        // Handle the form submission
+        document.getElementById('addRecipeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const recipeTitle = document.getElementById('recipeTitle').value;
+            const recipeImage = document.getElementById('recipeImage').files[0];
+            const recipeInstructions = document.getElementById('recipeInstructions').value;
+
+            const formData = new FormData();
+            formData.append('recipeTitle', recipeTitle);
+            formData.append('recipeImage', recipeImage);
+            formData.append('recipeInstructions', recipeInstructions);
+
+            fetch('http://localhost:5000/api/recipes', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById('addRecipeModal').style.display = 'none';
+                document.getElementById('addRecipeForm').reset();
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
